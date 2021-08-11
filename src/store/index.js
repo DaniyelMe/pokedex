@@ -8,7 +8,7 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       pokemon
     },
-    // plugins: [createPersistedState()],
+    plugins: [createPersistedState()],
 
     strict: process.env.DEBUGGING
   });
