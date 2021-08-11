@@ -6,7 +6,9 @@
   "author": "DaniyelMenda@Gmail.com",
   "private": true,
   "scripts": {
-    "dev": "quasar dev"
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
