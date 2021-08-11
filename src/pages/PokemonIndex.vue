@@ -45,11 +45,12 @@
       size="3em"
       :thickness="2"
     />
+
     <q-btn
-      v-if="pokemons.length > 0"
-      @click="clearAll"
+      :loading="isLoading"
+      @click="fetchMorePokemons"
       color="primary"
-      label="Clear all pokemons"
+      label="fetch more pokemons"
     />
   </q-page>
 </template>
