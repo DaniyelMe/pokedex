@@ -9,12 +9,11 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build",
-    "deploy": "push-dir --dir=dist/spa --remote=gh-pages --branch=master"
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
-    "push-dir": "^0.4.1",
     "quasar": "^2.0.0",
     "vuex": "^4.0.1",
     "vuex-persistedstate": "^4.0.0"
