@@ -9,29 +9,24 @@ const state = {
 };
 
 const actions = {
-  fetchPokemons: debounce(async ({ state, dispatch, commit }) => {
+  async fetchPokemons({ state, commit }) {
     commit('TOGGLE_LOADING');
-    const offset = state.pokemons.length / 151;
-    let allPokemons = [];
-
-    const { results } = await fetch(
-      `${baseUrl}pokemon?limit=151&offset=${offset}`
-    ).then((res) => res.json());
 
     const length = state.pokemons.length;
-    results.forEach((_, index) => {
+    let allPokemons = [];
+
+    for (let index = 0; index < 151; index++) {
       const p = fetch(
         `https://pokeapi.co/api/v2/pokemon/${length + index + 1}/`
       ).then((res) => res.json());
+
       allPokemons.push(p);
-    });
+    }
 
     allPokemons = await Promise.all(allPokemons);
 
     allPokemons = allPokemons.map((pokemon) => {
-      const id = pokemon.id;
-
-      const paddingZeros = id.toString().padStart(3, '0');
+      const paddingZeros = pokemon.id.toString().padStart(3, '0');
 
       return {
         ...pokemon,
@@ -41,7 +36,7 @@ const actions = {
 
     commit('SET_POKEMONS', allPokemons);
     commit('TOGGLE_LOADING');
-  }),
+  },
 
   async fetchTypePokemons({ commit }) {
     const { results } = await fetch(`${baseUrl}type/`).then((res) =>

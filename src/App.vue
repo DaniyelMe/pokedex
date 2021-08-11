@@ -7,7 +7,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
-  created() {
+  async created() {
     this.$store.dispatch('fetchPokemons');
     this.$store.dispatch('fetchTypePokemons');
   }

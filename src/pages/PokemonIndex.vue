@@ -40,16 +40,18 @@
 
     <q-spinner
       v-if="isLoading"
-      class="loading"
+      class="loading-animation"
       color="primary"
       size="3em"
       :thickness="2"
     />
 
     <q-btn
+      v-if="pokemons.length && !isLoading"
       :loading="isLoading"
       @click="fetchMorePokemons"
       color="primary"
+      class="loading"
       label="fetch more pokemons"
     />
   </q-page>
@@ -112,37 +114,45 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 
-  .loading {
+  header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .q-select {
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+    }
+
+    > div {
+      display: flex;
+      justify-content: space-evenly;
+      align-self: stretch;
+    }
+  }
+
+  .loading-animation {
     height: 90px;
     width: 90px;
     align-self: center;
     font-size: 2rem;
   }
-}
 
-header {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  .q-select {
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 900px;
+  .loading {
+    width: 250px;
+    align-self: center;
+    margin: 10px 0;
   }
 
-  > div {
-    display: flex;
-    justify-content: space-evenly;
-    align-self: stretch;
+  .pokemons-card-item {
+    height: 290px;
+    width: 290px;
   }
 }
+
 ::v-deep .q-field__control {
-  height: 60px;
-  margin-right: 20px;
-}
-.pokemons-card-item {
-  height: 290px;
-  width: 290px;
+  min-height: 60px;
+  margin-bottom: 20px;
 }
 </style>
