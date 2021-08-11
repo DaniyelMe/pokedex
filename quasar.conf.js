@@ -16,7 +16,7 @@ module.exports = configure(function (ctx) {
 
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-
+      publicPath: 'pokedex',
       chainWebpack(chain) {
         chain
           .plugin('eslint-webpack-plugin')
