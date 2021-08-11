@@ -1,0 +1,143 @@
+<template>
+  <q-page class="q-pa-md pokemon-page">
+    <header>
+      <q-select
+        filled
+        v-model="typeFilters"
+        multiple
+        :options="types"
+        use-chips
+        stack-label
+        emit-value
+        option-value="name"
+        option-label="name"
+        label="Type Criterias"
+      />
+
+      <div>
+        <q-btn
+          :loading="isLoading"
+          @click="fetchMorePokemons"
+          color="primary"
+          label="fetch more pokemons"
+        />
+
+        <q-btn @click="clearAll" color="primary" label="Clear all pokemons" />
+      </div>
+    </header>
+
+    <div class="q-pa-md">
+      <div class="row justify-center q-gutter-sm">
+        <q-intersection
+          v-for="pokemon in filterdPokemons"
+          :key="pokemon.url"
+          class="pokemons-card-item"
+        >
+          <PokemonCard :pokemon="pokemon" />
+        </q-intersection>
+      </div>
+    </div>
+
+    <q-spinner
+      v-if="isLoading"
+      class="loading"
+      color="primary"
+      size="3em"
+      :thickness="2"
+    />
+    <q-btn
+      v-if="pokemons.length > 0"
+      @click="clearAll"
+      color="primary"
+      label="Clear all pokemons"
+    />
+  </q-page>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+import PokemonCard from '../components/PokemonCard.vue';
+
+export default defineComponent({
+  name: 'pokemonIndex',
+  components: { PokemonCard },
+
+  data() {
+    return {
+      typeFilters: ['electric', 'fire', 'psychic'],
+      skills: ['Thunder Shock', 'Quick Attack', 'Electro Ball', 'Thunder Wave']
+    };
+  },
+
+  methods: {
+    fetchMorePokemons() {
+      this.$store.dispatch('fetchPokemons');
+    },
+    clearAll() {
+      this.$store.commit('CLEAR_ALL');
+      this.typeFilters = ['electric', 'fire', 'psychic'];
+    }
+  },
+
+  computed: {
+    filterdPokemons() {
+      if (this.typeFilters.includes('all')) return this.pokemons;
+
+      return this.pokemons.filter((p) => {
+        return p.types.every(({ type }) => {
+          return this.typeFilters.includes(type.name);
+        });
+      });
+    },
+    pokemons() {
+      return this.$store.state.pokemon?.pokemons || [];
+    },
+    types() {
+      return ['all', ...this.$store.state.pokemon.types];
+    },
+    isLoading() {
+      return this.$store.state.pokemon.isLoading;
+    }
+  }
+});
+</script>
+
+<style lang="scss" scoped>
+.pokemon-page {
+  display: flex;
+  flex-direction: column;
+
+  .loading {
+    height: 90px;
+    width: 90px;
+    align-self: center;
+    font-size: 2rem;
+  }
+}
+
+header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .q-select {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  > div {
+    display: flex;
+    justify-content: space-evenly;
+    align-self: stretch;
+  }
+}
+::v-deep .q-field__control {
+  height: 60px;
+  margin-right: 20px;
+}
+.pokemons-card-item {
+  height: 290px;
+  width: 290px;
+}
+</style>

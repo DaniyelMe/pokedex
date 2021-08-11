@@ -1,69 +1,53 @@
+import { debounce } from 'quasar';
+
 const baseUrl = 'https://pokeapi.co/api/v2/';
+
 const state = {
   pokemons: [],
+  isLoading: false
 };
 
 const actions = {
-  async fetchPokemonByName({ state, commit }, name) {
-
-
-    const pokemonData = await fetch(`${baseUrl}pokemon/${name}`).then((res) =>
-      res.json()
-    );
-
-    const id = pokemonData.id;
-
-    const paddingZeros = id.toString().padStart(3, '0');
-
-    const pokemonObject = {
-      ...pokemonData,
-      image: `https://serebii.net/pokemongo/pokemon/${paddingZeros}.png`
-    };
-
-    commit('SET_POKEMON', pokemonObject);
-  },
-
-  async fetchPokemons({ state, dispatch, commit }) {
+  fetchPokemons: debounce(async ({ state, dispatch, commit }) => {
+    commit('TOGGLE_LOADING');
     const offset = state.pokemons.length / 151;
+    let allPokemons = [];
 
     const { results } = await fetch(
       `${baseUrl}pokemon?limit=151&offset=${offset}`
     ).then((res) => res.json());
 
-    // results.forEach((poke, index) => {
-    //   dispatch('fetchInfoPokemon', { id: index + 1, ...poke });
-    // });
+    const length = state.pokemons.length;
+    results.forEach((_, index) => {
+      const p = fetch(
+        `https://pokeapi.co/api/v2/pokemon/${length + index + 1}/`
+      ).then((res) => res.json());
+      allPokemons.push(p);
+    });
 
-    console.log('results', results);
-    commit('SET_POKEMONS', results);
-  },
+    allPokemons = await Promise.all(allPokemons);
 
-  fetchInfoPokemon: async ({ state, commit }, pokemon) => {
-    const pokemonData = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokemon.id}/`
-    ).then((res) => res.json());
+    allPokemons = allPokemons.map((pokemon) => {
+      const id = pokemon.id;
 
-    const id = pokemonData.id;
+      const paddingZeros = id.toString().padStart(3, '0');
 
-    const paddingZeros = id.toString().padStart(3, '0');
-    console.log('paddingZeros', paddingZeros);
+      return {
+        ...pokemon,
+        image: `https://serebii.net/pokemongo/pokemon/${paddingZeros}.png`
+      };
+    });
 
-    const pokemonObject = {
-      ...pokemonData,
-      image: `https://serebii.net/pokemongo/pokemon/${paddingZeros}.png`
-    };
-
-    console.log('pokemonObject', pokemonObject);
-    if (pokemonObject.abilities) commit('SET_POKEMON', pokemonObject);
-  },
+    commit('SET_POKEMONS', allPokemons);
+    commit('TOGGLE_LOADING');
+  }),
 
   async fetchTypePokemons({ commit }) {
     const { results } = await fetch(`${baseUrl}type/`).then((res) =>
       res.json()
     );
 
-    const types = results.map((p) => p);
-    commit('SET_TYPES', types);
+    commit('SET_TYPES', results);
   }
 };
 
@@ -77,6 +61,12 @@ const mutations = {
   },
   SET_TYPES(state, types) {
     state.types = types;
+  },
+  TOGGLE_LOADING(state) {
+    state.isLoading = !state.isLoading;
+  },
+  CLEAR_ALL(state) {
+    state.pokemons = [];
   }
 };
 
