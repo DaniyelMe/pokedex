@@ -4,6 +4,7 @@ const baseUrl = 'https://pokeapi.co/api/v2/';
 
 const state = {
   pokemons: [],
+  types: [],
   isLoading: false
 };
 

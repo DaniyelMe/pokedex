@@ -93,7 +93,11 @@ export default defineComponent({
       return this.$store.state.pokemon?.pokemons || [];
     },
     types() {
-      return ['all', ...this.$store.state.pokemon.types];
+      let types = this.$store.state.pokemon?.types
+        ? ['all', ...this.$store.state.pokemon.types]
+        : [];
+
+      return types;
     },
     isLoading() {
       return this.$store.state.pokemon.isLoading;
