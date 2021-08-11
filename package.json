@@ -5,6 +5,7 @@
   "productName": "pokedexion",
   "author": "DaniyelMenda@Gmail.com",
   "private": true,
+  "homepage": "https://daniyelme.github.io/pokedex/",
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build",
