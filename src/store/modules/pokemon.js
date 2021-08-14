@@ -9,16 +9,21 @@ const state = {
 };
 
 const actions = {
-  async fetchPokemons({ state, commit }) {
+  fetchPokemons: debounce(async ({ state, commit }) => {
     commit('TOGGLE_LOADING');
 
     const length = state.pokemons.length;
     let allPokemons = [];
 
-    for (let index = 0; index < 151; index++) {
-      const p = fetch(
-        `https://pokeapi.co/api/v2/pokemon/${length + index + 1}/`
-      ).then((res) => res.json());
+    // We finally caught them all
+    if (length === 898) return;
+
+    for (let i = 0; i < 151 && length + i + 1 <= 898; i++) {
+      const id = length + i + 1;
+
+      const p = fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`).then((res) =>
+        res.json()
+      );
 
       allPokemons.push(p);
     }
@@ -36,7 +41,7 @@ const actions = {
 
     commit('SET_POKEMONS', allPokemons);
     commit('TOGGLE_LOADING');
-  },
+  }),
 
   async fetchTypePokemons({ commit }) {
     const { results } = await fetch(`${baseUrl}type/`).then((res) =>

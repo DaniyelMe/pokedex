@@ -1,6 +1,6 @@
 <template>
   <q-card class="pokemon-card" :style="createBackgroundString">
-    <header>{{ pokemon.name }}</header>
+    <header>{{ pokemon.name.split('-')[0] }}</header>
 
     <div
       class="image-container"
@@ -101,6 +101,9 @@ export default defineComponent({
   border-radius: 10px;
 
   margin: 10px auto;
+
+  text-transform: capitalize;
+
   .image-container {
     border-radius: 50%;
     width: 120px;
