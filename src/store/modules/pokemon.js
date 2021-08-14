@@ -16,7 +16,7 @@ const actions = {
     let allPokemons = [];
 
     // We finally caught them all
-    if (length === 898) return;
+    if (length === 898) return commit('TOGGLE_LOADING');
 
     for (let i = 0; i < 151 && length + i + 1 <= 898; i++) {
       const id = length + i + 1;
